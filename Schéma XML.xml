@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="https://rennesdev.fr/schema/invoice/v2"
+         profile="BASIC"
+         currency="EUR"
+         language="fr">
+  <InvoiceHeader>
+    <Number>2026-0001</Number>
+    <IssueDate>2026-09-01</IssueDate>
+    <SupplyDate>2026-08-31</SupplyDate>
+    <OperationNature>services</OperationNature> <!-- goods | services | mixed -->
+    <TVAOnDebitsOption>true</TVAOnDebitsOption>
+    <PaymentTerms>30 days end of month</PaymentTerms>
+    <DueDate>2026-10-31</DueDate>
+  </InvoiceHeader>
+
+  <Seller>
+    <Name>RennesDev</Name>
+    <SIREN>123456789</SIREN>
+    <SIRET>12345678900012</SIRET>
+    <VATNumber>FR12123456789</VATNumber>
+    <NAFCode>6201Z</NAFCode>
+    <LegalForm>EI</LegalForm>
+    <ShareCapital xsi:nil="true"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    <RCSCity xsi:nil="true"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    <Address>
+      <Line1>1 rue de la Facturation</Line1>
+      <Line2/>
+      <PostalCode>35000</PostalCode>
+      <City>Rennes</City>
+      <CountryCode>FR</CountryCode>
+    </Address>
+    <Email>contact@rennesdev.fr</Email>
+    <Phone>+33 6 12 34 56 78</Phone>
+    <Website>https://rennesdev.fr</Website>
+  </Seller>
+
+  <Buyer>
+    <Name>Client SAS</Name>
+    <SIREN>987654321</SIREN>
+    <SIRET>98765432100034</SIRET>
+    <VATNumber>FR12987654321</VATNumber>
+    <BillingAddress>
+      <Line1>10 rue du Client</Line1>
+      <Line2/>
+      <PostalCode>35000</PostalCode>
+      <City>Rennes</City>
+      <CountryCode>FR</CountryCode>
+    </BillingAddress>
+    <ShippingAddress>
+      <Line1>12 rue du Client</Line1>
+      <Line2/>
+      <PostalCode>35000</PostalCode>
+      <City>Rennes</City>
+      <CountryCode>FR</CountryCode>
+    </ShippingAddress>
+    <Email>compta@client-sas.fr</Email>
+  </Buyer>
+
+  <Lines>
+    <Line>
+      <LineNumber>1</LineNumber>
+      <Description>Prestation de développement Python</Description>
+      <Quantity unit="day">2.0</Quantity>
+      <UnitPriceHT>500.0</UnitPriceHT>
+      <DiscountRate>0.0</DiscountRate>
+      <TVARate>20.0</TVARate>
+      <LineTotalHT>1000.0</LineTotalHT>
+      <LineTotalTVA>200.0</LineTotalTVA>
+      <LineTotalTTC>1200.0</LineTotalTTC>
+    </Line>
+    <Line>
+      <LineNumber>2</LineNumber>
+      <Description>Maintenance applicative</Description>
+      <Quantity unit="service">1.0</Quantity>
+      <UnitPriceHT>200.0</UnitPriceHT>
+      <DiscountRate>10.0</DiscountRate>
+      <TVARate>20.0</TVARate>
+      <LineTotalHT>180.0</LineTotalHT>
+      <LineTotalTVA>36.0</LineTotalTVA>
+      <LineTotalTTC>216.0</LineTotalTTC>
+    </Line>
+  </Lines>
+
+  <Totals>
+    <TotalHT>1180.0</TotalHT>
+    <TotalDiscount>20.0</TotalDiscount>
+    <TotalTVA>236.0</TotalTVA>
+    <TotalTTC>1416.0</TotalTTC>
+  </Totals>
+
+  <Meta>
+    <CreatedAt>2026-09-01T10:00:00Z</CreatedAt>
+    <GenerationTool>rennesdev-invoice-v2</GenerationTool>
+  </Meta>
+</Invoice>
