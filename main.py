@@ -14,6 +14,12 @@ from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 
 
+from app.models import InvoicePayload, ComputationResult
+from app.services.compute import compute_invoice
+from app.services.xml_builder import build_xml
+from app.services.pdf_builder import build_pdf_stub
+
+
 class OperationNature(str, Enum):
     goods = "goods"
     services = "services"

@@ -1,0 +1,85 @@
+{
+  "invoice": {
+    "number": "2026-0001",
+    "issue_date": "2026-09-01",
+    "supply_date": "2026-08-31",
+    "currency": "EUR",
+    "operation_nature": "services",             
+    "tva_on_debits_option": true,               
+    "payment_terms": "30 days end of month",
+    "due_date": "2026-10-31"
+  },
+  "seller": {
+    "name": "RennesDev",
+    "siren": "123456789",
+    "siret": "12345678900012",
+    "vat_number": "FR12123456789",
+    "naf_code": "6201Z",
+    "legal_form": "EI",
+    "share_capital": null,
+    "rcs_city": null,
+    "address": {
+      "line1": "1 rue de la Facturation",
+      "line2": null,
+      "postal_code": "35000",
+      "city": "Rennes",
+      "country_code": "FR"
+    },
+    "email": "contact@rennesdev.fr",
+    "phone": "+33 6 12 34 56 78",
+    "website": "https://rennesdev.fr"
+  },
+  "buyer": {
+    "name": "Client SAS",
+    "siren": "987654321",                        
+    "siret": "98765432100034",
+    "vat_number": "FR12987654321",
+    "address_billing": {
+      "line1": "10 rue du Client",
+      "line2": null,
+      "postal_code": "35000",
+      "city": "Rennes",
+      "country_code": "FR"
+    },
+    "address_shipping": {                       
+      "line1": "12 rue du Client",
+      "line2": null,
+      "postal_code": "35000",
+      "city": "Rennes",
+      "country_code": "FR"
+    },
+    "email": "compta@client-sas.fr"
+  },
+  "lines": [
+    {
+      "line_number": 1,
+      "description": "Prestation de développement Python",
+      "quantity": 2.0,
+      "unit": "day",
+      "unit_price_ht": 500.0,
+      "tva_rate": 20.0,
+      "discount_rate": 0.0
+    },
+    {
+      "line_number": 2,
+      "description": "Maintenance applicative",
+      "quantity": 1.0,
+      "unit": "service",
+      "unit_price_ht": 200.0,
+      "tva_rate": 20.0,
+      "discount_rate": 10.0
+    }
+  ],
+  "totals": {
+    "total_ht": 1100.0,
+    "total_discount": 20.0,
+    "total_tva": 216.0,
+    "total_ttc": 1316.0
+  },
+  "meta": {
+    "language": "fr",
+    "profile": "BASIC",                          
+    "created_at": "2026-09-01T10:00:00Z",
+    "generation_tool": "rennesdev-invoice-v2"
+  }
+}
