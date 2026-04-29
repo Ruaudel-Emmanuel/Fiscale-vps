@@ -1,0 +1,79 @@
+{
+  "seller": {
+    "name": "RennesDev",
+    "siren": "123456789",
+    "siret": "12345678900012",
+    "vat_number": "FR12123456789",
+    "naf_code": "6201Z",
+    "legal_form": "EI",
+    "share_capital": 0,
+    "rcs_city": "Rennes",
+    "address": {
+      "line1": "10 rue de Rennes",
+      "line2": "",
+      "postal_code": "35000",
+      "city": "Rennes",
+      "country_code": "FR"
+    },
+    "email": "contact@rennesdev.fr",
+    "phone": "0601020304",
+    "website": "https://rennesdev.fr"
+  },
+  "buyer": {
+    "name": "Atelier Breizh PME",
+    "siren": "987654321",
+    "siret": "98765432100019",
+    "vat_number": "FR32987654321",
+    "address_billing": {
+      "line1": "25 avenue des PME",
+      "line2": "Bâtiment B",
+      "postal_code": "35700",
+      "city": "Rennes",
+      "country_code": "FR"
+    },
+    "address_shipping": {
+      "line1": "3 rue de la Logistique",
+      "line2": "",
+      "postal_code": "35510",
+      "city": "Cesson-Sévigné",
+      "country_code": "FR"
+    },
+    "email": "gestion@atelier-breizh-pme.fr"
+  },
+  "invoice": {
+    "number": "FAC-2026-0001",
+    "issue_date": "2026-04-29",
+    "supply_date": "2026-04-28",
+    "currency": "EUR",
+    "operation_nature": "SERVICES",
+    "tva_on_debits_option": true,
+    "payment_terms": "Paiement à 30 jours fin de mois",
+    "due_date": "2026-05-31"
+  },
+  "lines": [
+    {
+      "line_number": 1,
+      "description": "Audit de préparation à la facturation électronique",
+      "quantity": 1,
+      "unit": "forfait",
+      "unit_price_ht": 450.0,
+      "discount_rate": 0,
+      "tva_rate": 20.0
+    },
+    {
+      "line_number": 2,
+      "description": "Développement du prototype de génération PDF/XML",
+      "quantity": 6,
+      "unit": "heure",
+      "unit_price_ht": 75.0,
+      "discount_rate": 10.0,
+      "tva_rate": 20.0
+    }
+  ],
+  "meta": {
+    "profile": "BASIC",
+    "language": "fr",
+    "generation_tool": "rennesdev-invoice-v1",
+    "created_at": "2026-04-29T11:45:00"
+  }
+}

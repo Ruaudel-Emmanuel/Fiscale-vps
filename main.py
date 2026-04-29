@@ -8,16 +8,13 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 
 from fastapi import FastAPI
 from fastapi.responses import Response, StreamingResponse
-from pydantic import BaseModel, EmailStr, Field, HttpUrl, ConfigDict, constr
+from pydantic import BaseModel, EmailStr, Field, HttpUrl, ConfigDict
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 
-
-from app.models import InvoicePayload, ComputationResult
-from app.services.compute import compute_invoice
-from app.services.xml_builder import build_xml
-from app.services.pdf_builder import build_pdf_stub
+# Suppression des imports redondants qui causaient les erreurs F811
+# car les classes et fonctions sont redéfinies ci-dessous.
 
 
 class OperationNature(str, Enum):
@@ -31,10 +28,12 @@ class Profile(str, Enum):
     EN16931 = "EN16931"
 
 
-SIREN = constr(pattern=r"^[0-9]{9}$")
-SIRET = constr(pattern=r"^[0-9]{14}$")
-CountryCode = constr(pattern=r"^[A-Z]{2}$")
-CurrencyCode = constr(pattern=r"^[A-Z]{3}$")
+# Pour Pylance, on utilise str pour le type et on laisse constr 
+# pour la validation Pydantic si nécessaire, ou on utilise Field(pattern=...)
+SIREN_PATTERN = r"^[0-9]{9}$"
+SIRET_PATTERN = r"^[0-9]{14}$"
+COUNTRY_PATTERN = r"^[A-Z]{2}$"
+CURRENCY_PATTERN = r"^[A-Z]{3}$"
 
 
 class Address(BaseModel):
@@ -44,7 +43,7 @@ class Address(BaseModel):
     line2: Optional[str] = None
     postal_code: str = Field(..., min_length=1)
     city: str = Field(..., min_length=1)
-    country_code: CountryCode = Field(default="FR")
+    country_code: str = Field(default="FR", pattern=COUNTRY_PATTERN)
 
 
 class InvoiceHeader(BaseModel):
@@ -53,7 +52,7 @@ class InvoiceHeader(BaseModel):
     number: str = Field(..., min_length=1)
     issue_date: date
     supply_date: Optional[date] = None
-    currency: CurrencyCode = Field(default="EUR")
+    currency: str = Field(default="EUR", pattern=CURRENCY_PATTERN)
     operation_nature: OperationNature
     tva_on_debits_option: bool = Field(default=False)
     payment_terms: Optional[str] = None
@@ -64,8 +63,8 @@ class Seller(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str = Field(..., min_length=1)
-    siren: SIREN
-    siret: Optional[SIRET] = None
+    siren: str = Field(..., pattern=SIREN_PATTERN)
+    siret: Optional[str] = Field(None, pattern=SIRET_PATTERN)
     vat_number: Optional[str] = None
     naf_code: Optional[str] = None
     legal_form: Optional[str] = None
@@ -81,8 +80,8 @@ class Buyer(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str = Field(..., min_length=1)
-    siren: SIREN
-    siret: Optional[SIRET] = None
+    siren: str = Field(..., pattern=SIREN_PATTERN)
+    siret: Optional[str] = Field(None, pattern=SIRET_PATTERN)
     vat_number: Optional[str] = None
     address_billing: Address
     address_shipping: Optional[Address] = None
@@ -422,3 +421,12 @@ def generate_invoice_pdf(payload: InvoicePayload) -> StreamingResponse:
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+@app.get("/", tags=["meta"])
+async def root() -> dict:
+    return {
+        "message": "RennesDev e-Invoicing Demo API",
+        "docs": "/docs",
+        "health": "/health",
+    }
