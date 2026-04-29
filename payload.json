@@ -1,0 +1,32 @@
+{
+  "sellerName": "RennesDev",
+  "sellerSiren": "123456789",
+  "sellerAddress": "Rennes, France",
+  "buyerName": "Client SARL",
+  "buyerSiren": "987654321",
+  "buyerAddress": "Paris, France",
+  "invoiceNumber": "INV-2026-001",
+  "invoiceDate": "2026-04-29",
+  "serviceDate": "2026-04-29",
+  "currency": "EUR",
+  "paymentTerms": "30 days net",
+  "paymentMethod": "Bank transfer",
+  "operationNature": "Service",
+  "deliveryAddress": "Same as billing",
+  "vatOnDebits": "No",
+  "notes": "Thank you for your business.",
+  "lines": [
+    {
+      "description": "Python development services",
+      "quantity": 1,
+      "unitPrice": 450,
+      "vatRate": 20
+    },
+    {
+      "description": "Technical audit",
+      "quantity": 2,
+      "unitPrice": 180,
+      "vatRate": 20
+    }
+  ]
+}

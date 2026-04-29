@@ -13,6 +13,14 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response, StreamingResponse
+
+from backend.app.models import InvoicePayload, ComputationResult
+from backend.app.services import compute_invoice, build_xml, build_pdf_stub
+
 # Suppression des imports redondants qui causaient les erreurs F811
 # car les classes et fonctions sont redéfinies ci-dessous.
 
@@ -392,6 +400,17 @@ def build_pdf_stub(
 
 
 app = FastAPI(title="RennesDev Invoice API V2")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
