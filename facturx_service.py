@@ -189,7 +189,7 @@ def build_cii_xml(data):
     add_text(monetary, f'{{{NS_RAM}}}DuePayableAmount', fmt_dec(total))
 
     indent(root)
-    return '<?xml version="1.0" encoding="UTF-8"?>\n' + tostring(root, encoding='unicode')
+    return tostring(root, encoding="unicode")
 
 
 def build_visual_pdf(data, pdf_path):
@@ -267,6 +267,8 @@ def build_visual_pdf(data, pdf_path):
     c.drawString(40, y, f"Paiement : {data.get('paymentMethod', '')} | Conditions : {data.get('paymentTerms', '')}")
     c.save()
 
+import logging
+logger = logging.getLogger(__name__)
 
 def generate_facturx_pdf(payload_dict):
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -277,7 +279,7 @@ def generate_facturx_pdf(payload_dict):
 
         build_visual_pdf(payload_dict, visual_pdf)
         xml_content = build_cii_xml(payload_dict)
-        logger.info("XML preview: %s", xml_content[:200])
+        logger.info("XML preview: %s", xml_content[:120])
         xml_file.write_text(xml_content, encoding="utf-8")
 
         generate_from_file(
