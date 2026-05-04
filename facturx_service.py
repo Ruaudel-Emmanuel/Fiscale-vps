@@ -7,6 +7,7 @@ from facturx import generate_from_file
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
+from fastapi.logger import logger 
 
 def q(value):
     return Decimal(str(value)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
@@ -275,7 +276,9 @@ def generate_facturx_pdf(payload_dict):
         output_pdf = tmp_path / "invoice-facturx.pdf"
 
         build_visual_pdf(payload_dict, visual_pdf)
-        xml_file.write_text(build_cii_xml(payload_dict), encoding="utf-8")
+        xml_content = build_cii_xml(payload_dict)
+        logger.info("XML preview: %s", xml_content[:200])
+        xml_file.write_text(xml_content, encoding="utf-8")
 
         generate_from_file(
             str(visual_pdf),
@@ -283,4 +286,4 @@ def generate_facturx_pdf(payload_dict):
             output_pdf_file=str(output_pdf),
         )
 
-    return output_pdf.read_bytes(), output_pdf.name
+        return output_pdf.read_bytes(), output_pdf.name
