@@ -44,14 +44,16 @@ def tax_category_and_reason(data):
 
 def compute_totals(lines):
     subtotal = q(sum(q(line['quantity']) * q(line['unitPrice']) for line in lines))
-    vat_total = q(sum((q(line['quantity']) * q(line['unitPrice']) * q(line.get('vatRate', 0)) / Decimal('100')) for line in lines))
+    vat_total = q(sum(
+        (q(line['quantity']) * q(line['unitPrice']) * q(line.get('vatRate', 0)) / Decimal('100'))
+        for line in lines
+    ))
     total = q(subtotal + vat_total)
     return subtotal, vat_total, total
 
 
 def indent(elem, level=0):
-    i = "
-" + level * "  "
+    i = "\n" + level * "  "
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
@@ -186,8 +188,7 @@ def build_cii_xml(data):
     add_text(monetary, f'{{{NS_RAM}}}DuePayableAmount', fmt_dec(total))
 
     indent(root)
-    return '<?xml version="1.0" encoding="UTF-8"?>
-' + tostring(root, encoding='unicode')
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + tostring(root, encoding='unicode')
 
 
 def build_visual_pdf(data, pdf_path):
@@ -268,23 +269,18 @@ def build_visual_pdf(data, pdf_path):
 
 def generate_facturx_pdf(payload_dict):
     with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir_path = Path(tmpdir)
-        invoice_number = payload_dict.get('invoiceNumber', 'invoice')
-        visual_pdf = tmpdir_path / f"{invoice_number}.visual.pdf"
-        xml_file = tmpdir_path / 'factur-x.xml'
-        output_pdf = tmpdir_path / f"{invoice_number}.pdf"
+        tmp_path = Path(tmpdir)
+        visual_pdf = tmp_path / "invoice.pdf"
+        xml_file = tmp_path / "factur-x.xml"
+        output_pdf = tmp_path / "invoice-facturx.pdf"
 
         build_visual_pdf(payload_dict, visual_pdf)
-        xml_file.write_text(build_cii_xml(payload_dict), encoding='utf-8')
+        xml_file.write_text(build_cii_xml(payload_dict), encoding="utf-8")
 
         generate_from_file(
             str(visual_pdf),
             str(xml_file),
-            flavor='factur-x',
-            level='basic',
             output_pdf_file=str(output_pdf),
-            check_xsd=True,
-            check_schematron=True,
         )
 
-        return output_pdf.read_bytes(), output_pdf.name
+    return output_pdf.read_bytes(), output_pdf.name
