@@ -9,15 +9,19 @@ from reportlab.pdfgen import canvas
 from app.models import InvoicePayload, ComputationResult
 
 
-def _draw_text_line(pdf: canvas.Canvas, text: str, x_mm: float, y_mm: float) -> None:
+def _draw_text_line(
+    pdf: canvas.Canvas, text: str, x_mm: float, y_mm: float
+) -> None:
     pdf.drawString(x_mm * mm, y_mm * mm, text)
 
 
-def build_pdf_stub(payload: InvoicePayload, computed: ComputationResult) -> bytes:
+def build_pdf_stub(
+    payload: InvoicePayload, computed: ComputationResult
+) -> bytes:
     """
     Construit un PDF simple et lisible pour le dev.
 
-    Ce n’est pas encore du PDF/A‑3 ni un vrai Factur‑X, mais ça donne
+    Ce n'est pas encore du PDF/A‑3 ni un vrai Factur‑X, mais ça donne
     une représentation claire du contenu de la facture pour tests/démos.
     """
     buffer = BytesIO()
@@ -47,10 +51,11 @@ def build_pdf_stub(payload: InvoicePayload, computed: ComputationResult) -> byte
         y -= 6
 
     for line in computed.lines:
+        # Découpage strict pour éviter E501
         text = (
-            f"[{line.line_number}] {line.description} | qty {line.quantity} "
-            f"| unit HT {line.unit_price_ht:.2f} | TVA {line.tva_rate:.2f}% "
-            f"| TTC {line.line_ttc:.2f}"
+            f"[{line.line_number}] {line.description} | "
+            f"qty {line.quantity} | unit HT {line.unit_price_ht:.2f} | "
+            f"TVA {line.tva_rate:.2f}% | TTC {line.line_ttc:.2f}"
         )
         _draw_text_line(pdf, text, 20, y)
         y -= 6
@@ -60,11 +65,12 @@ def build_pdf_stub(payload: InvoicePayload, computed: ComputationResult) -> byte
             y = (height / mm) - 20
 
     y -= 4
+    curr = payload.invoice.currency
     summary_lines = [
-        f"Total discount: {computed.totals.total_discount:.2f} {payload.invoice.currency}",
-        f"Total HT: {computed.totals.total_ht:.2f} {payload.invoice.currency}",
-        f"Total TVA: {computed.totals.total_tva:.2f} {payload.invoice.currency}",
-        f"Total TTC: {computed.totals.total_ttc:.2f} {payload.invoice.currency}",
+        f"Total discount: {computed.totals.total_discount:.2f} {curr}",
+        f"Total HT: {computed.totals.total_ht:.2f} {curr}",
+        f"Total TVA: {computed.totals.total_tva:.2f} {curr}",
+        f"Total TTC: {computed.totals.total_ttc:.2f} {curr}",
     ]
     for line in summary_lines:
         _draw_text_line(pdf, line, 20, y)
@@ -72,7 +78,8 @@ def build_pdf_stub(payload: InvoicePayload, computed: ComputationResult) -> byte
 
     if payload.invoice.tva_on_debits_option:
         y -= 3
-        _draw_text_line(pdf, "VAT mention: Option for payment of VAT on debits", 20, y)
+        msg = "VAT mention: Option for payment of VAT on debits"
+        _draw_text_line(pdf, msg, 20, y)
 
     pdf.showPage()
     pdf.save()

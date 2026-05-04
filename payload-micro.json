@@ -1,0 +1,38 @@
+{
+  "sellerName": "Emmanuel Ruaudel EI",
+  "sellerSiren": "123456789",
+  "sellerVat": "",
+  "sellerEmail": "contact@rennesdev.fr",
+  "sellerAddress": "Rennes, France",
+
+  "buyerName": "Studio Client SAS",
+  "buyerSiren": "987654321",
+  "buyerVat": "",
+  "buyerAddress": "12 rue des Entrepreneurs, 44000 Nantes, France",
+  "deliveryAddress": "12 rue des Entrepreneurs, 44000 Nantes, France",
+
+  "invoiceNumber": "ME2026-0001",
+  "invoiceDate": "2026-05-04",
+  "serviceDate": "2026-05-04",
+  "currency": "EUR",
+  "paymentTerms": "Paiement à réception",
+  "paymentMethod": "Virement bancaire",
+  "operationNature": "Prestation de développement web",
+  "vatOnDebits": "No",
+  "notes": "TVA non applicable, article 293 B du CGI.",
+
+  "lines": [
+    {
+      "description": "Création d'un site vitrine",
+      "quantity": 1,
+      "unitPrice": 650.00,
+      "vatRate": 0
+    },
+    {
+      "description": "Mise en ligne et réglages techniques",
+      "quantity": 1,
+      "unitPrice": 150.00,
+      "vatRate": 0
+    }
+  ]
+}

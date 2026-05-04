@@ -1,0 +1,38 @@
+{
+  "sellerName": "RennesDev",
+  "sellerSiren": "123456789",
+  "sellerVat": "FR40123456789",
+  "sellerEmail": "contact@rennesdev.fr",
+  "sellerAddress": "10 rue de Rennes, 35000 Rennes, France",
+
+  "buyerName": "Atelier Exemple SARL",
+  "buyerSiren": "987654321",
+  "buyerVat": "FR76987654321",
+  "buyerAddress": "25 avenue de la Gare, 75010 Paris, France",
+  "deliveryAddress": "25 avenue de la Gare, 75010 Paris, France",
+
+  "invoiceNumber": "F2026-0001",
+  "invoiceDate": "2026-05-04",
+  "serviceDate": "2026-05-03",
+  "currency": "EUR",
+  "paymentTerms": "Paiement à 30 jours fin de mois",
+  "paymentMethod": "Virement bancaire",
+  "operationNature": "Prestation de développement",
+  "vatOnDebits": "Yes",
+  "notes": "Merci pour votre confiance.",
+
+  "lines": [
+    {
+      "description": "Développement backend FastAPI",
+      "quantity": 2,
+      "unitPrice": 450.00,
+      "vatRate": 20
+    },
+    {
+      "description": "Intégration API facturation électronique",
+      "quantity": 1,
+      "unitPrice": 380.00,
+      "vatRate": 20
+    }
+  ]
+}

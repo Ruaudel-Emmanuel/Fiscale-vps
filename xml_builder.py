@@ -38,17 +38,25 @@ def build_xml(payload: InvoicePayload, computed: ComputationResult) -> bytes:
     # Header
     header = SubElement(root, "InvoiceHeader")
     SubElement(header, "Number").text = payload.invoice.number
-    SubElement(header, "IssueDate").text = payload.invoice.issue_date.isoformat()
+    
+    issue_date = payload.invoice.issue_date.isoformat()
+    SubElement(header, "IssueDate").text = issue_date
+    
     if payload.invoice.supply_date:
-        SubElement(header, "SupplyDate").text = payload.invoice.supply_date.isoformat()
-    SubElement(header, "OperationNature").text = payload.invoice.operation_nature.value
-    SubElement(header, "TVAOnDebitsOption").text = (
-        "true" if payload.invoice.tva_on_debits_option else "false"
-    )
+        supply_date = payload.invoice.supply_date.isoformat()
+        SubElement(header, "SupplyDate").text = supply_date
+        
+    op_nature = payload.invoice.operation_nature.value
+    SubElement(header, "OperationNature").text = op_nature
+    
+    tva_option = "true" if payload.invoice.tva_on_debits_option else "false"
+    SubElement(header, "TVAOnDebitsOption").text = tva_option
+    
     if payload.invoice.payment_terms:
         SubElement(header, "PaymentTerms").text = payload.invoice.payment_terms
     if payload.invoice.due_date:
-        SubElement(header, "DueDate").text = payload.invoice.due_date.isoformat()
+        due_date = payload.invoice.due_date.isoformat()
+        SubElement(header, "DueDate").text = due_date
 
     # Seller
     seller = SubElement(root, "Seller")
@@ -63,7 +71,8 @@ def build_xml(payload: InvoicePayload, computed: ComputationResult) -> bytes:
     if payload.seller.legal_form:
         SubElement(seller, "LegalForm").text = payload.seller.legal_form
     if payload.seller.share_capital is not None:
-        SubElement(seller, "ShareCapital").text = f"{payload.seller.share_capital:.2f}"
+        cap = payload.seller.share_capital
+        SubElement(seller, "ShareCapital").text = f"{cap:.2f}"
     if payload.seller.rcs_city:
         SubElement(seller, "RCSCity").text = payload.seller.rcs_city
 
@@ -113,7 +122,9 @@ def build_xml(payload: InvoicePayload, computed: ComputationResult) -> bytes:
     # Totals
     totals_el = SubElement(root, "Totals")
     SubElement(totals_el, "TotalHT").text = f"{computed.totals.total_ht:.2f}"
-    SubElement(totals_el, "TotalDiscount").text = f"{computed.totals.total_discount:.2f}"
+    SubElement(totals_el, "TotalDiscount").text = (
+        f"{computed.totals.total_discount:.2f}"
+    )
     SubElement(totals_el, "TotalTVA").text = f"{computed.totals.total_tva:.2f}"
     SubElement(totals_el, "TotalTTC").text = f"{computed.totals.total_ttc:.2f}"
 
@@ -133,3 +144,4 @@ def build_xml(payload: InvoicePayload, computed: ComputationResult) -> bytes:
     SubElement(meta_el, "GenerationTool").text = generation_tool
 
     return tostring(root, encoding="utf-8", xml_declaration=True)
+
