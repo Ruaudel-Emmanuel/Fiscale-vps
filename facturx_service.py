@@ -277,15 +277,16 @@ def generate_facturx_pdf(payload_dict):
         xml_file = tmp_path / "factur-x.xml"
         output_pdf = tmp_path / "invoice-facturx.pdf"
 
-        build_visual_pdf(payload_dict, visual_pdf)
-        xml_content = build_cii_xml(payload_dict)
-        logger.info("XML preview: %s", xml_content[:120])
-        xml_file.write_text(xml_content, encoding="utf-8")
+    build_visual_pdf(payload_dict, visual_pdf)
+    xml_content = build_cii_xml(payload_dict)
+    debug_xml = Path("/app/tmp/debug-facturx.xml")
+    debug_xml.write_text(xml_content, encoding="utf-8")
+    xml_file.write_text(xml_content, encoding="utf-8")
 
-        generate_from_file(
-            str(visual_pdf),
-            str(xml_file),
-            output_pdf_file=str(output_pdf),
-        )
+    generate_from_file(
+        str(visual_pdf),
+        str(xml_file),
+        output_pdf_file=str(output_pdf),
+    )
 
-        return output_pdf.read_bytes(), output_pdf.name
+    return output_pdf.read_bytes(), output_pdf.name
