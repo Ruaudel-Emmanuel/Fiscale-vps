@@ -8,6 +8,8 @@ from facturx import generate_from_file
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
+from xml.etree.ElementTree import Element, SubElement, tostring, register_namespace
+
 logger = logging.getLogger(__name__)
 
 
@@ -86,14 +88,11 @@ def build_cii_xml(data):
     NS_RAM = "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
     NS_UDT = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
 
-    root = Element(
-        f"{{{NS_RSM}}}CrossIndustryInvoice",
-        {
-            "xmlns:rsm": NS_RSM,
-            "xmlns:ram": NS_RAM,
-            "xmlns:udt": NS_UDT,
-        },
-    )
+    register_namespace("rsm", NS_RSM)
+    register_namespace("ram", NS_RAM)
+    register_namespace("udt", NS_UDT)
+
+    root = Element(f"{{{NS_RSM}}}CrossIndustryInvoice")
 
     subtotal, vat_total, total = compute_totals(data["lines"])
     currency = data.get("currency", "EUR") or "EUR"
