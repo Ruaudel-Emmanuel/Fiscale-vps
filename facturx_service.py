@@ -277,16 +277,29 @@ def generate_facturx_pdf(payload_dict):
         xml_file = tmp_path / "factur-x.xml"
         output_pdf = tmp_path / "invoice-facturx.pdf"
 
-    build_visual_pdf(payload_dict, visual_pdf)
-    xml_content = build_cii_xml(payload_dict)
-    debug_xml = Path("/app/tmp/debug-facturx.xml")
-    debug_xml.write_text(xml_content, encoding="utf-8")
-    xml_file.write_text(xml_content, encoding="utf-8")
+        # 1) PDF lisible
+        build_visual_pdf(payload_dict, visual_pdf)
 
-    generate_from_file(
-        str(visual_pdf),
-        str(xml_file),
-        output_pdf_file=str(output_pdf),
-    )
+        # 2) XML CII
+        xml_content = build_cii_xml(payload_dict)
+        logger.info("XML preview: %r", xml_content[:200])
 
-    return output_pdf.read_bytes(), output_pdf.name
+        # Optionnel: dossier tmp persistant dans l'image si tu veux garder une trace
+        persist_tmp = Path("/app/tmp")
+        try:
+            persist_tmp.mkdir(parents=True, exist_ok=True)
+            (persist_tmp / "debug-facturx.xml").write_text(xml_content, encoding="utf-8")
+        except Exception as e:
+            logger.warning("Impossible d'écrire /app/tmp/debug-facturx.xml : %s", e)
+
+        xml_file.write_text(xml_content, encoding="utf-8")
+
+        # 3) Génération Factur-X
+        generate_from_file(
+            str(visual_pdf),
+            str(xml_file),
+            output_pdf_file=str(output_pdf),
+        )
+
+        # 4) Retour du PDF généré
+        return output_pdf.read_bytes(), output_pdf.name
