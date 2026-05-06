@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur Factur-X | Rennesdev</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">Rennesdev · V1 test</p>
+      <h1>Générer une facture Factur-X</h1>
+      <p class="intro">
+        Version de test : génération d’une facture Factur-X en euro, à partir d’un formulaire simple,
+        avec téléchargement du PDF sur votre poste local.
+      </p>
+    </section>
+
+    <section class="card">
+      <form id="invoice-form">
+        <div class="grid two">
+          <div class="field">
+            <label for="invoiceNumber">Numéro de facture</label>
+            <input id="invoiceNumber" name="invoiceNumber" type="text" placeholder="FAC-2026-001" required />
+          </div>
+
+          <div class="field">
+            <label for="invoiceDate">Date de facture</label>
+            <input id="invoiceDate" name="invoiceDate" type="date" required />
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="field">
+            <label for="serviceDate">Date de prestation</label>
+            <input id="serviceDate" name="serviceDate" type="date" required />
+          </div>
+
+          <div class="field">
+            <label for="paymentTerms">Conditions de paiement</label>
+            <input id="paymentTerms" name="paymentTerms" type="text" placeholder="Paiement à réception" value="Paiement à réception" />
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="field">
+            <label for="paymentMethod">Mode de paiement</label>
+            <input id="paymentMethod" name="paymentMethod" type="text" placeholder="Virement bancaire" value="Virement bancaire" />
+          </div>
+
+          <div class="field">
+            <label for="sellerVat">TVA vendeur</label>
+            <input id="sellerVat" name="sellerVat" type="text" placeholder="Laisser vide si exonéré art. 293 B" />
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="field">
+            <label for="sellerName">Nom vendeur</label>
+            <input id="sellerName" name="sellerName" type="text" placeholder="Rennesdev" required />
+          </div>
+
+          <div class="field">
+            <label for="sellerAddress">Adresse vendeur</label>
+            <input id="sellerAddress" name="sellerAddress" type="text" placeholder="Adresse du vendeur" required />
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="field">
+            <label for="buyerName">Nom client</label>
+            <input id="buyerName" name="buyerName" type="text" placeholder="Nom du client" required />
+          </div>
+
+          <div class="field">
+            <label for="buyerAddress">Adresse client</label>
+            <input id="buyerAddress" name="buyerAddress" type="text" placeholder="Adresse du client" required />
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="field">
+            <label for="buyerSiren">SIREN client</label>
+            <input id="buyerSiren" name="buyerSiren" type="text" placeholder="Optionnel" />
+          </div>
+
+          <div class="field">
+            <label for="notes">Notes</label>
+            <input id="notes" name="notes" type="text" placeholder="Ex. TVA non applicable, art. 293 B du CGI" />
+          </div>
+        </div>
+
+        <div class="lines-header">
+          <h2>Lignes de facture</h2>
+          <button type="button" id="add-line-btn" class="btn btn-secondary">Ajouter une ligne</button>
+        </div>
+
+        <div id="lines-container" class="lines-container"></div>
+
+        <div class="summary" id="summary-box">
+          <div class="summary-row">
+            <span>Sous-total HT</span>
+            <strong id="subtotal-display">0,00 €</strong>
+          </div>
+          <div class="summary-row">
+            <span>TVA</span>
+            <strong id="vat-display">0,00 €</strong>
+          </div>
+          <div class="summary-row total">
+            <span>Total TTC</span>
+            <strong id="total-display">0,00 €</strong>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="submit-btn" class="btn btn-primary">
+            Générer la facture Factur-X
+          </button>
+        </div>
+
+        <div id="status-box" class="status-box" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <template id="line-template">
+    <div class="line-item">
+      <div class="grid line-grid">
+        <div class="field line-description">
+          <label>Description</label>
+          <input type="text" class="line-description-input" placeholder="Prestation de développement" required />
+        </div>
+
+        <div class="field">
+          <label>Qté</label>
+          <input type="number" class="line-quantity-input" min="0.01" step="0.01" value="1" required />
+        </div>
+
+        <div class="field">
+          <label>PU HT</label>
+          <input type="number" class="line-unit-price-input" min="0" step="0.01" value="350" required />
+        </div>
+
+        <div class="field">
+          <label>TVA %</label>
+          <select class="line-vat-rate-input">
+            <option value="0">0</option>
+            <option value="5.5">5,5</option>
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+          </select>
+        </div>
+
+        <div class="field line-total-box">
+          <label>Total HT</label>
+          <div class="line-total-display">350,00 €</div>
+        </div>
+
+        <div class="field line-remove-box">
+          <label>&nbsp;</label>
+          <button type="button" class="btn btn-danger remove-line-btn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>
