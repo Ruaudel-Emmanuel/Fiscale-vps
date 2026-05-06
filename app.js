@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://api.rennesdev.fr";
+const API_BASE_URL = "https://...";
 
 const form = document.getElementById("invoice-form");
 const linesContainer = document.getElementById("lines-container");
