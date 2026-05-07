@@ -1,5 +1,5 @@
 // Configuration API
-const apiBase = "https://fiscale.rennesdev.fr/api/facturx";
+const apiBase = "https://...";
 
 // Références DOM
 const linesContainer = document.getElementById("lines-container");
