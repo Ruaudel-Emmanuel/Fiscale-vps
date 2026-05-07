@@ -1,115 +1,116 @@
-const API_BASE_URL = "https://...";
+// Configuration API
+const apiBase = "https://fiscale.rennesdev.fr/api/facturx";
 
-const form = document.getElementById("invoice-form");
+// Références DOM
 const linesContainer = document.getElementById("lines-container");
 const addLineBtn = document.getElementById("add-line-btn");
-const submitBtn = document.getElementById("submit-btn");
+const form = document.getElementById("invoice-form");
 const statusBox = document.getElementById("status-box");
 
+// Totaux
 const subtotalDisplay = document.getElementById("subtotal-display");
 const vatDisplay = document.getElementById("vat-display");
 const totalDisplay = document.getElementById("total-display");
 
-function formatEuro(value) {
+// Template de ligne
+const lineTemplate = document.getElementById("line-template");
+
+// -------- Outils --------
+
+function formatMoney(value) {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
-    currency: "EUR"
+    currency: "EUR",
   }).format(Number(value || 0));
 }
 
-function toNumber(value) {
-  const num = parseFloat(value);
-  return Number.isFinite(num) ? num : 0;
+function showStatus(message, type = "info") {
+  statusBox.textContent = message;
+  statusBox.className = `status-box status-${type}`;
 }
 
-function createLine(defaults = {}) {
-  const tpl = document.getElementById("line-template");
-  const node = tpl.content.firstElementChild.cloneNode(true);
+// -------- Gestion des lignes --------
 
-  const descriptionInput = node.querySelector(".line-description-input");
-  const quantityInput = node.querySelector(".line-quantity-input");
-  const unitPriceInput = node.querySelector(".line-unit-price-input");
-  const vatRateInput = node.querySelector(".line-vat-rate-input");
-  const totalBox = node.querySelector(".line-total-display");
-  const removeBtn = node.querySelector(".remove-line-btn");
+function updateLineTotal(lineEl) {
+  const qtyInput = lineEl.querySelector(".line-quantity-input");
+  const unitInput = lineEl.querySelector(".line-unit-price-input");
+  const totalEl = lineEl.querySelector(".line-total-display");
 
-  descriptionInput.value = defaults.description || "";
-  quantityInput.value = defaults.quantity ?? 1;
-  unitPriceInput.value = defaults.unitPrice ?? 350;
-  vatRateInput.value = defaults.vatRate ?? 20;
+  const qty = Number(qtyInput.value || 0);
+  const unit = Number(unitInput.value || 0);
+  const total = qty * unit;
 
-  function updateLineTotal() {
-    const quantity = toNumber(quantityInput.value);
-    const unitPrice = toNumber(unitPriceInput.value);
-    const lineTotal = quantity * unitPrice;
-    totalBox.textContent = formatEuro(lineTotal);
-    updateSummary();
-  }
+  totalEl.textContent = formatMoney(total);
+}
 
-  quantityInput.addEventListener("input", updateLineTotal);
-  unitPriceInput.addEventListener("input", updateLineTotal);
-  vatRateInput.addEventListener("change", updateSummary);
+function updateTotals() {
+  const lines = getLinesData();
 
-  removeBtn.addEventListener("click", () => {
-    node.remove();
-    updateSummary();
+  const subtotal = lines.reduce(
+    (sum, line) => sum + line.quantity * line.unitPrice,
+    0
+  );
+  const vat = lines.reduce(
+    (sum, line) => sum + line.quantity * line.unitPrice * (line.vatRate / 100),
+    0
+  );
+  const total = subtotal + vat;
+
+  subtotalDisplay.textContent = formatMoney(subtotal);
+  vatDisplay.textContent = formatMoney(vat);
+  totalDisplay.textContent = formatMoney(total);
+}
+
+function createLine() {
+  const fragment = lineTemplate.content.cloneNode(true);
+  const lineEl = fragment.querySelector(".line-item");
+
+  const inputs = lineEl.querySelectorAll("input, select");
+  const removeBtn = lineEl.querySelector(".remove-line-btn");
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      updateLineTotal(lineEl);
+      updateTotals();
+    });
   });
 
-  updateLineTotal();
-  linesContainer.appendChild(node);
+  removeBtn.addEventListener("click", () => {
+    lineEl.remove();
+    updateTotals();
+  });
+
+  // Calcul initial du total de la ligne
+  updateLineTotal(lineEl);
+
+  return fragment;
+}
+
+function addLine() {
+  const line = createLine();
+  linesContainer.appendChild(line);
+  updateTotals();
 }
 
 function getLinesData() {
-  const lineNodes = [...linesContainer.querySelectorAll(".line-item")];
-
-  return lineNodes.map((lineNode) => ({
-    description: lineNode.querySelector(".line-description-input").value.trim(),
-    quantity: toNumber(lineNode.querySelector(".line-quantity-input").value),
-    unitPrice: toNumber(lineNode.querySelector(".line-unit-price-input").value),
-    vatRate: toNumber(lineNode.querySelector(".line-vat-rate-input").value)
+  const items = Array.from(document.querySelectorAll(".line-item"));
+  return items.map((item) => ({
+    description: item
+      .querySelector(".line-description-input")
+      .value.trim(),
+    quantity: Number(
+      item.querySelector(".line-quantity-input").value || 0
+    ),
+    unitPrice: Number(
+      item.querySelector(".line-unit-price-input").value || 0
+    ),
+    vatRate: Number(
+      item.querySelector(".line-vat-rate-input").value || 0
+    ),
   }));
 }
 
-function updateSummary() {
-  const lines = getLinesData();
-
-  const subtotal = lines.reduce((sum, line) => {
-    return sum + line.quantity * line.unitPrice;
-  }, 0);
-
-  const vat = lines.reduce((sum, line) => {
-    return sum + (line.quantity * line.unitPrice * line.vatRate / 100);
-  }, 0);
-
-  const total = subtotal + vat;
-
-  subtotalDisplay.textContent = formatEuro(subtotal);
-  vatDisplay.textContent = formatEuro(vat);
-  totalDisplay.textContent = formatEuro(total);
-}
-
-function setStatus(type, message) {
-  statusBox.className = "status-box";
-  if (type) statusBox.classList.add(type);
-  statusBox.textContent = message || "";
-}
-
-function getFilenameFromDisposition(disposition) {
-  if (!disposition) return "facture-facturx.pdf";
-  const match = disposition.match(/filename="?([^"]+)"?/i);
-  return match?.[1] || "facture-facturx.pdf";
-}
-
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
+// -------- Construction du payload --------
 
 function buildPayload() {
   const lines = getLinesData();
@@ -131,82 +132,86 @@ function buildPayload() {
   }
 
   return {
-    invoiceNumber: document.getElementById("invoiceNumber").value.trim(),
+    invoiceNumber: document
+      .getElementById("invoiceNumber")
+      .value.trim(),
     invoiceDate: document.getElementById("invoiceDate").value,
     serviceDate: document.getElementById("serviceDate").value,
     currency: "EUR",
     sellerName: document.getElementById("sellerName").value.trim(),
-    sellerAddress: document.getElementById("sellerAddress").value.trim(),
+    sellerAddress: document
+      .getElementById("sellerAddress")
+      .value.trim(),
     sellerVat: document.getElementById("sellerVat").value.trim(),
     buyerName: document.getElementById("buyerName").value.trim(),
-    buyerAddress: document.getElementById("buyerAddress").value.trim(),
+    buyerAddress: document
+      .getElementById("buyerAddress")
+      .value.trim(),
     buyerSiren: document.getElementById("buyerSiren").value.trim(),
-    paymentTerms: document.getElementById("paymentTerms").value.trim(),
-    paymentMethod: document.getElementById("paymentMethod").value.trim(),
+    paymentTerms: document
+      .getElementById("paymentTerms")
+      .value.trim(),
+    paymentMethod: document
+      .getElementById("paymentMethod")
+      .value.trim(),
     notes: document.getElementById("notes").value.trim(),
-    lines
+    lines,
   };
 }
 
-async function submitInvoice(event) {
+// -------- Appel API --------
+
+async function generateInvoice(payload) {
+  const response = await fetch(`${apiBase}/generate-facturx`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Erreur API (${response.status}) : ${errorText}`);
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "invoice-facturx.pdf";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+// -------- Événements --------
+
+addLineBtn.addEventListener("click", (event) => {
   event.preventDefault();
+  addLine();
+});
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showStatus("", "info");
 
   try {
     const payload = buildPayload();
+    showStatus("Génération de la facture en cours...", "info");
 
-    submitBtn.disabled = true;
-    setStatus("loading", "Génération de la facture en cours...");
+    await generateInvoice(payload);
 
-    const response = await fetch(`${API_BASE_URL}/generate-facturx`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/pdf"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      let errorMessage = "Erreur lors de la génération de la facture.";
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.detail || errorMessage;
-      } catch (_) {}
-      throw new Error(errorMessage);
-    }
-
-    const blob = await response.blob();
-    const disposition = response.headers.get("Content-Disposition");
-    const filename = getFilenameFromDisposition(disposition);
-
-    downloadBlob(blob, filename);
-    setStatus("success", "Facture générée avec succès. Le téléchargement a démarré.");
+    showStatus("Facture générée avec succès.", "success");
   } catch (error) {
-    setStatus("error", error.message || "Une erreur inconnue est survenue.");
-  } finally {
-    submitBtn.disabled = false;
+    console.error(error);
+    showStatus(error.message || "Erreur inattendue.", "error");
   }
-}
-
-addLineBtn.addEventListener("click", () => {
-  createLine({
-    description: "",
-    quantity: 1,
-    unitPrice: 350,
-    vatRate: 20
-  });
 });
 
-form.addEventListener("submit", submitInvoice);
+// -------- Initialisation --------
 
-createLine({
-  description: "Prestation de développement Python",
-  quantity: 1,
-  unitPrice: 350,
-  vatRate: 20
-});
-
-const today = new Date().toISOString().slice(0, 10);
-document.getElementById("invoiceDate").value = today;
-document.getElementById("serviceDate").value = today;
-document.getElementById("sellerName").value = "Rennesdev";
+addLine();
+updateTotals();
+showStatus("Remplis le formulaire puis génère ta facture.", "info");
