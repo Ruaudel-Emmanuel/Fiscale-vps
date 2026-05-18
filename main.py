@@ -3,28 +3,31 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.facturx import router as facturx_router
 
-
 app = FastAPI(
     title="Fiscale Factur-X API",
-    version="2.0.0",
-    description="API de génération de factures Factur-X sur VPS",
+    version="3.0.0",
+    description="API de génération de factures Factur-X sur VPS avec payload structuré et validations métier.",
 )
-
-# À resserrer plus tard sur tes domaines réels (ex. https://fiscale.rennesdev.fr)
-origins = ["https://rennesdev.fr"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://rennesdev.fr"],
-    allow_credentials=True,  # ou False si tu n'utilises pas de cookies
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_origins=[
+        "https://rennesdev.fr",
+        "https://www.rennesdev.fr",
+        "https://fiscale.rennesdev.fr",
+        "http://localhost:3000",
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
 @app.get("/health")
-def health():
-    return {"status": "ok", "service": "facturx-api", "version": "2.0.0"}
+def health() -> dict[str, str]:
+    return {"status": "ok", "service": "facturx-api", "version": "3.0.0"}
 
 
 app.include_router(facturx_router)
