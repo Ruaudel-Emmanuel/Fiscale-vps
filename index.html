@@ -3,169 +3,353 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Générateur Factur-X | Rennesdev</title>
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <title>Rennesdev · Générateur Factur-X</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --danger: #b91c1c;
+      --success: #166534;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 30px;
+    }
+
+    .intro {
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .section-title {
+      margin: 28px 0 14px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .status.error {
+      display: block;
+      background: #fef2f2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+
+    .status.success {
+      display: block;
+      background: #f0fdf4;
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: -6px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <main class="page">
-    <section class="hero">
-      <p class="eyebrow">Rennesdev · V1 test</p>
+  <div class="container">
+    <div class="card">
       <h1>Générer une facture Factur-X</h1>
       <p class="intro">
-        Version de test : génération d’une facture Factur-X en euro, à partir d’un formulaire simple,
-        avec téléchargement du PDF sur votre poste local.
+        Version simple et compatible avec ton backend actuel : on envoie un payload minimal valide, puis on télécharge le PDF généré.
       </p>
-    </section>
 
-    <section class="card">
       <form id="invoice-form">
-        <div class="grid two">
+        <div class="section-title">Facture</div>
+        <div class="grid">
           <div class="field">
             <label for="invoiceNumber">Numéro de facture</label>
-            <input id="invoiceNumber" name="invoiceNumber" type="text" placeholder="FAC-2026-001" required />
+            <input id="invoiceNumber" name="invoiceNumber" type="text" value="FAC-2026-001" required />
           </div>
 
           <div class="field">
             <label for="invoiceDate">Date de facture</label>
-            <input id="invoiceDate" name="invoiceDate" type="date" required />
+            <input id="invoiceDate" name="invoiceDate" type="date" value="2026-05-20" required />
+          </div>
+
+          <div class="field">
+            <label for="currency">Devise</label>
+            <select id="currency" name="currency">
+              <option value="EUR" selected>EUR</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="totalAmount">Montant HT</label>
+            <input id="totalAmount" name="totalAmount" type="number" step="0.01" value="350.00" required />
+          </div>
+
+          <div class="field">
+            <label for="taxTotalAmount">Montant TVA</label>
+            <input id="taxTotalAmount" name="taxTotalAmount" type="number" step="0.01" value="0.00" required />
+          </div>
+
+          <div class="field">
+            <label for="buyerReference">Référence client</label>
+            <input id="buyerReference" name="buyerReference" type="text" value="SOLO" />
+          </div>
+
+          <div class="field">
+            <label for="buyerOrderReference">Référence commande</label>
+            <input id="buyerOrderReference" name="buyerOrderReference" type="text" value="SOLO" />
+          </div>
+
+          <div class="field full">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes">Facture freelance - usage interne.</textarea>
           </div>
         </div>
 
-        <div class="grid two">
-          <div class="field">
-            <label for="serviceDate">Date de prestation</label>
-            <input id="serviceDate" name="serviceDate" type="date" required />
-          </div>
-
-          <div class="field">
-            <label for="paymentTerms">Conditions de paiement</label>
-            <input id="paymentTerms" name="paymentTerms" type="text" placeholder="Paiement à réception" value="Paiement à réception" />
-          </div>
-        </div>
-
-        <div class="grid two">
-          <div class="field">
-            <label for="paymentMethod">Mode de paiement</label>
-            <input id="paymentMethod" name="paymentMethod" type="text" placeholder="Virement bancaire" value="Virement bancaire" />
-          </div>
-
-          <div class="field">
-            <label for="sellerVat">TVA vendeur</label>
-            <input id="sellerVat" name="sellerVat" type="text" placeholder="Laisser vide si exonéré art. 293 B" />
-          </div>
-        </div>
-
-        <div class="grid two">
+        <div class="section-title">Vendeur</div>
+        <div class="grid">
           <div class="field">
             <label for="sellerName">Nom vendeur</label>
-            <input id="sellerName" name="sellerName" type="text" placeholder="Rennesdev" required />
+            <input id="sellerName" name="sellerName" type="text" value="Rennesdev" required />
           </div>
 
           <div class="field">
-            <label for="sellerAddress">Adresse vendeur</label>
-            <input id="sellerAddress" name="sellerAddress" type="text" placeholder="Adresse du vendeur" required />
+            <label for="sellerCountryCode">Pays vendeur</label>
+            <input id="sellerCountryCode" name="sellerCountryCode" type="text" value="FR" required />
+          </div>
+
+          <div class="field">
+            <label for="sellerLegalId">SIRET / identifiant légal</label>
+            <input id="sellerLegalId" name="sellerLegalId" type="text" value="12345678900000" required />
+          </div>
+
+          <div class="field">
+            <label for="sellerVatId">N° TVA</label>
+            <input id="sellerVatId" name="sellerVatId" type="text" value="FR00123456789" required />
           </div>
         </div>
 
-        <div class="grid two">
+        <div class="section-title">Client</div>
+        <div class="grid">
           <div class="field">
             <label for="buyerName">Nom client</label>
-            <input id="buyerName" name="buyerName" type="text" placeholder="Nom du client" required />
+            <input id="buyerName" name="buyerName" type="text" value="Client PME" required />
           </div>
 
           <div class="field">
-            <label for="buyerAddress">Adresse client</label>
-            <input id="buyerAddress" name="buyerAddress" type="text" placeholder="Adresse du client" required />
+            <label for="buyerLegalId">SIRET / identifiant client</label>
+            <input id="buyerLegalId" name="buyerLegalId" type="text" value="99999999900000" required />
           </div>
         </div>
 
-        <div class="grid two">
-          <div class="field">
-            <label for="buyerSiren">SIREN client</label>
-            <input id="buyerSiren" name="buyerSiren" type="text" placeholder="Optionnel" />
-          </div>
-
-          <div class="field">
-            <label for="notes">Notes</label>
-            <input id="notes" name="notes" type="text" placeholder="Ex. TVA non applicable, art. 293 B du CGI" />
-          </div>
-        </div>
-
-        <div class="lines-header">
-          <h2>Lignes de facture</h2>
-          <button type="button" id="add-line-btn" class="btn btn-secondary">Ajouter une ligne</button>
-        </div>
-
-        <div id="lines-container" class="lines-container"></div>
-
-        <div class="summary" id="summary-box">
-          <div class="summary-row">
-            <span>Sous-total HT</span>
-            <strong id="subtotal-display">0,00 €</strong>
-          </div>
-          <div class="summary-row">
-            <span>TVA</span>
-            <strong id="vat-display">0,00 €</strong>
-          </div>
-          <div class="summary-row total">
-            <span>Total TTC</span>
-            <strong id="total-display">0,00 €</strong>
-          </div>
-        </div>
+        <p class="hint">
+          Cette version du front est volontairement minimale pour rester alignée avec le backend Factur-X validé.
+        </p>
 
         <div class="actions">
-          <button type="submit" id="submit-btn" class="btn btn-primary">
-            Générer la facture Factur-X
-          </button>
+          <button type="submit" id="submitBtn">Générer le PDF Factur-X</button>
         </div>
 
-        <div id="status-box" class="status-box" aria-live="polite"></div>
+        <div id="status" class="status"></div>
       </form>
-    </section>
-  </main>
-
-  <template id="line-template">
-    <div class="line-item">
-      <div class="grid line-grid">
-        <div class="field line-description">
-          <label>Description</label>
-          <input type="text" class="line-description-input" placeholder="Prestation de développement" required />
-        </div>
-
-        <div class="field">
-          <label>Qté</label>
-          <input type="number" class="line-quantity-input" min="0.01" step="0.01" value="1" required />
-        </div>
-
-        <div class="field">
-          <label>PU HT</label>
-          <input type="number" class="line-unit-price-input" min="0" step="0.01" value="350" required />
-        </div>
-
-        <div class="field">
-          <label>TVA %</label>
-          <select class="line-vat-rate-input">
-            <option value="0">0</option>
-            <option value="5.5">5,5</option>
-            <option value="10">10</option>
-            <option value="20" selected>20</option>
-          </select>
-        </div>
-
-        <div class="field line-total-box">
-          <label>Total HT</label>
-          <div class="line-total-display">350,00 €</div>
-        </div>
-
-        <div class="field line-remove-box">
-          <label>&nbsp;</label>
-          <button type="button" class="btn btn-danger remove-line-btn">Supprimer</button>
-        </div>
-      </div>
     </div>
-  </template>
+  </div>
 
-  <script src="./app.js"></script>
+  <script>
+    const form = document.getElementById("invoice-form");
+    const statusBox = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function setStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = "status " + type;
+    }
+
+    function clearStatus() {
+      statusBox.textContent = "";
+      statusBox.className = "status";
+    }
+
+    function buildPayload() {
+      return {
+        invoiceNumber: document.getElementById("invoiceNumber").value.trim(),
+        invoiceDate: document.getElementById("invoiceDate").value,
+        currency: document.getElementById("currency").value,
+        totalAmount: Number(document.getElementById("totalAmount").value || 0),
+        taxTotalAmount: Number(document.getElementById("taxTotalAmount").value || 0),
+        buyerReference: document.getElementById("buyerReference").value.trim() || "SOLO",
+        buyerOrderReference: document.getElementById("buyerOrderReference").value.trim() || "SOLO",
+        notes: document.getElementById("notes").value.trim(),
+        seller: {
+          name: document.getElementById("sellerName").value.trim(),
+          countryCode: document.getElementById("sellerCountryCode").value.trim() || "FR",
+          legalId: document.getElementById("sellerLegalId").value.trim(),
+          vatId: document.getElementById("sellerVatId").value.trim()
+        },
+        buyer: {
+          name: document.getElementById("buyerName").value.trim(),
+          legalId: document.getElementById("buyerLegalId").value.trim()
+        }
+      };
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Génération en cours...";
+
+      const payload = buildPayload();
+
+      try {
+        const response = await fetch("/facturx/generate-facturx", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          setStatus(`Erreur API (${response.status}) : ${errorText}`, "error");
+          return;
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = `${payload.invoiceNumber || "facture"}-facturx.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+
+        setStatus("PDF Factur-X généré avec succès.", "success");
+      } catch (error) {
+        setStatus(`Erreur réseau ou JavaScript : ${error.message}`, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Générer le PDF Factur-X";
+      }
+    });
+  </script>
 </body>
 </html>
