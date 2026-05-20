@@ -65,6 +65,7 @@ def normalize_payload(data):
 
 def build_minimum_cii_xml(payload):
     data = normalize_payload(payload)
+    total = data["totalAmount"]
 
     ns_rsm = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
     ns_ram = "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
@@ -119,8 +120,9 @@ def build_minimum_cii_xml(payload):
         header_settlement,
         f"{{{ns_ram}}}SpecifiedTradeSettlementHeaderMonetarySummation",
     )
-    add_text(monetary, f"{{{ns_ram}}}GrandTotalAmount", fmt_dec(data["totalAmount"]))
-    add_text(monetary, f"{{{ns_ram}}}DuePayableAmount", fmt_dec(data["totalAmount"]))
+    add_text(monetary, f"{{{ns_ram}}}TaxBasisTotalAmount", fmt_dec(total))
+    add_text(monetary, f"{{{ns_ram}}}GrandTotalAmount", fmt_dec(total))
+    add_text(monetary, f"{{{ns_ram}}}DuePayableAmount", fmt_dec(total))
 
     indent(root)
     xml_string = tostring(root, encoding="unicode")
