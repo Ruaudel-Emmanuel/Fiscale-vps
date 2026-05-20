@@ -1,47 +1,20 @@
 {
   "invoiceNumber": "FAC-2026-001",
-  "invoiceDate": "2026-05-18",
-  "serviceDate": "2026-05-18",
+  "invoiceDate": "2026-05-20",
   "currency": "EUR",
-
+  "totalAmount": 350.00,
+  "taxTotalAmount": 0.00,
+  "buyerReference": "SOLO",
+  "buyerOrderReference": "SOLO",
   "seller": {
     "name": "Rennesdev",
-    "addressLine1": "12 rue de test",
-    "postalCode": "35000",
-    "city": "Rennes",
     "countryCode": "FR",
-    "siren": "123456789",
-    "vatId": "FR40123456789"
+    "legalId": "12345678900000",
+    "vatId": "FR00123456789"
   },
-
   "buyer": {
     "name": "Client PME",
-    "addressLine1": "25 avenue du Centre",
-    "postalCode": "44000",
-    "city": "Nantes",
-    "countryCode": "FR",
-    "siren": "987654321",
-    "vatId": "FR10987654321",
-    "electronicAddress": "client@entreprise.fr",
-    "electronicAddressScheme": "EM"
+    "legalId": "99999999900000"
   },
-
-  "invoiceProfile": {
-    "buyerType": "B2B_FR",
-    "vatRegime": "FR_STANDARD_20",
-    "paymentMethodCode": "BANK_TRANSFER",
-    "paymentTermsCode": "PAYMENT_ON_RECEIPT",
-    "latePenaltyProfile": "ECB_PLUS_10",
-    "collectionFeeProfile": "FIXED_40_EUR",
-    "discountProfile": "NO_DISCOUNT"
-  },
-
-  "lines": [
-    {
-      "description": "Développement Python",
-      "quantity": 1,
-      "unitPrice": 350.00,
-      "unitCode": "H87"
-    }
-  ]
+  "notes": "Facture freelance - usage interne."
 }
