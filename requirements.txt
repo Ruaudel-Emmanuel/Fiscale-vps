@@ -1,7 +1,7 @@
-fastapi==0.141.1
+fastapi==0.142.2
 uvicorn[standard]==0.54.0
 pydantic==2.13.5
 email-validator==2.3.0
-factur-x==6.8
+factur-x==7.3
 reportlab==5.0.1
 lxml==6.1.3
