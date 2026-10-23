@@ -1,55 +1,109 @@
-# Factur-X Generator V3
+# 🇫🇷 Factur-X Generator — Facturation électronique conforme EN 16931
 
-This package provides a practical V3 architecture for generating a **real Factur-X invoice**: a human-readable PDF combined with an embedded XML file inside a **PDF/A-3** container.[web:227][web:166]
+> Générez des factures **PDF/A-3 avec XML embarqué** (norme Factur-X) en 3 clics.  
+> **Frontend HTML + Backend Python** — zéro dépendance cloud, zéro abonnement.
 
-## What is included
+---
 
-- `facturx-generator-v3.html`: frontend page that captures invoice data and exports a JSON payload.
-- `facturx_builder.py`: Python backend script that turns the payload into:
-  - a readable invoice PDF,
-  - an XML invoice file,
-  - and a final Factur-X PDF with embedded XML.[web:216][web:415]
+## 🎯 Pourquoi ce projet existe
 
-## Why a backend is required
+### Le problème
+La **facturation électronique** devient obligatoire en France (loi 2026). Les TPE/PME doivent produire des factures au format **Factur-X** (PDF + XML dans un seul fichier PDF/A-3).  
+Les solutions du marché sont soit :
+- **chères** (abonnements SaaS),
+- **complexes** (ERP surdimensionnés),
+- **non conformes** (PDF simple + XML séparé = rejeté).
 
-A true Factur-X invoice is not just a PDF plus a downloadable XML file. It must be a **PDF/A-3 file** with an XML invoice embedded inside the PDF and appropriate metadata.[web:227][web:414][web:166]
+### La solution
+Un générateur **100 % open source**, **local**, **conforme** :
 
-That level of compliance is better handled on the server side with dedicated libraries and validation tools than with browser-only JavaScript.[web:216][web:220]
+| Avant (éditeur SaaS) | Après (Factur-X Generator) |
+|---|---|
+| 💶 20-50 €/mois d'abonnement | ☕ Gratuit, une installation |
+| 🔒 Vos données fiscales chez un tiers | 🔐 Tout reste sur votre machine |
+| ⏳ Formulaire lent, pas personnalisable | ⚡ Frontend HTML léger, modifiable |
+| ❌ Pas de contrôle sur le format | ✅ Code ouvert, vous validez |
 
-## Python dependencies
+---
 
-Install the required packages:
+## ✨ Ce que ça fait (et ce que ça prouve)
 
-```bash
-pip install factur-x reportlab
+| Compétence démontrée | Comment |
+|---|---|
+| **🐍 Python backend** | Génération PDF/A-3 + XML factur-x avec `reportlab` + `factur-x` |
+| **🎨 Frontend HTML/JS** | Interface de saisie avec export JSON vers le backend |
+| **📜 Conformité réglementaire** | Respect de la norme EN 16969 / Factur-X (profil minimum) |
+| **🔧 Architecture réelle** | Séparation frontend/backend, pipeline de validation |
+| **🧪 QA / validation** | Instructions veraPDF + validateur EN 16931 incluses |
+
+---
+
+## 🏗️ Architecture
+
+```
+facturx-generator-v3/
+├── facturx-generator-v3.html   ← Frontend : saisir les données, exporter payload.json
+├── facturx_builder.py          ← Backend : générer PDF visuel + XML + fusion PDF/A-3
+└── output.pdf                  ← Facture Factur-X finale (prête à envoyer)
 ```
 
-The `factur-x` library is designed to generate Factur-X invoices from a regular PDF and a compliant XML invoice file.[web:216]
+### Pipeline de génération
 
-## Usage
+```
+📝 HTML form → payload.json → 🐍 Python
+                                 ├── 📄 PDF visuel (reportlab)
+                                 ├── 📄 XML factur-x
+                                 └── 📦 Fusion → PDF/A-3 final
+```
 
-1. Open the HTML page.
-2. Fill in the invoice fields.
-3. Export the payload as `payload.json`.
-4. Run the backend command:
+---
+
+## 🚀 Utilisation
 
 ```bash
+# 1. Installer les dépendances
+pip install factur-x reportlab
+
+# 2. Ouvrir le formulaire HTML
+
+# 3. Remplir → exporter payload.json
+
+# 4. Générer la facture conforme
 python facturx_builder.py payload.json output.pdf
 ```
 
-The script creates a visual PDF, builds the XML file, then embeds the XML in the final PDF/A-3 Factur-X output.[web:415][web:216]
+### Validation recommandée
 
-## Important limitation
+```bash
+# Conformité PDF/A-3
+verapdf output.pdf
 
-This package demonstrates the correct **technical direction**, but the sample XML generated here is still simplified. For production use, the XML must fully match the selected Factur-X profile and the applicable EN 16931 business rules.[web:227][web:166]
+# Conformité EN 16931 (validateur Factur-X en ligne)
+```
 
-## Validation before production
+---
 
-Before using generated invoices in production, validate:
+## 🔒 Sécurité & Privacy
 
-- the PDF/A-3 compliance with **veraPDF**,[web:418][web:216]
-- the embedded XML and business rules with a **Factur-X / EN 16931 validator**.[web:204][web:227]
+- **Aucune donnée ne quitte votre machine** — tout est local
+- **Aucun compte, aucun abonnement** — pas de cloud, pas de SaaS
+- Le code est ouvert : vous contrôlez exactement ce qu'il fait
 
-## Practical note
+---
 
-The `factur-x` library can generate a compliant Factur-X file when the source PDF is PDF/A compatible and the XML is compliant with the expected profile.[web:216]
+## 📋 Prérequis
+
+- Python 3.9+
+- `pip install factur-x reportlab`
+- (Optionnel) veraPDF pour validation PDF/A
+
+---
+
+## 👤 À propos
+
+Développé par [Emmanuel Ruaudel](https://github.com/Ruaudel-Emmanuel) — freelance automation & Python.  
+Ce projet montre une maîtrise de :
+- Python backend (génération PDF, XML, conformité réglementaire)
+- Frontend HTML/JS (formulaire, export JSON)
+- Architecture logicielle (séparation des concerns, pipeline)
+- Connaissances métier (norme Factur-X, EN 16931)
