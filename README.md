@@ -6,13 +6,6 @@ Ce projet illustre mon accompagnement des TPE/PME vers la facturation électroni
 
 ## 🤝 Ce projet, c'est aussi mon métier
 
-**Emmanuel Ruaudel — Directeur de la Transformation Numérique pour TPE/PME.**
-J'aide les dirigeants à libérer 5 à 10 h par semaine en automatisant leurs tâches
-répetitives : audit des processus, cas d'usage IA à fort ROI, déploiement et
-fiabilisation (n8n · Python · IA locale).
-
-📧 [ruaudel.emmanuel@orange.fr](mailto:ruaudel.emmanuel@orange.fr) · 🌐 [rennesdev.fr](https://rennesdev.fr)
-
 
 > Générez des factures **PDF/A-3 avec XML embarqué** (norme Factur-X) en 3 clics.  
 > **Frontend HTML + Backend Python** — zéro dépendance cloud, zéro abonnement.
@@ -115,9 +108,9 @@ verapdf output.pdf
 
 ## 👤 À propos
 
-Développé par [Emmanuel Ruaudel](https://github.com/Ruaudel-Emmanuel) — Directeur de la Transformation Numérique.  
-Ce projet montre une maîtrise de :
-- Python backend (génération PDF, XML, conformité réglementaire)
-- Frontend HTML/JS (formulaire, export JSON)
-- Architecture logicielle (séparation des concerns, pipeline)
-- Connaissances métier (norme Factur-X, EN 16931)
+**Emmanuel Ruaudel — Directeur de la Transformation Numérique pour TPE/PME.**
+J'aide les dirigeants à libérer 5 à 10 h par semaine en automatisant leurs tâches
+répetitives : audit des processus, cas d'usage IA à fort ROI, déploiement et
+fiabilisation (n8n · Python · IA locale).
+
+📧 [ruaudel.emmanuel@orange.fr](mailto:ruaudel.emmanuel@orange.fr) · 🌐 [rennesdev.fr](https://rennesdev.fr)
