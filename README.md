@@ -1,5 +1,21 @@
 # 🇫🇷 Factur-X Generator — Facturation électronique conforme EN 16931
 
+Ce projet illustre mon accompagnement des TPE/PME vers la facturation électronique obligatoire : conforme, local, sans abonnement.
+
+---
+
+## 🤝 Ce projet, c'est aussi mon métier
+
+**Emmanuel Ruaudel — Directeur de la Transformation Numérique pour TPE/PME.**
+J'aide les dirigeants à libérer 5 à 10 h par semaine en automatisant leurs tâches
+répetitives : audit des processus, cas d'usage IA à fort ROI, déploiement et
+fiabilisation (n8n · Python · IA locale).
+
+👉 [LIGNE D'ACCROCHE DU REPO ICI]
+
+📧 [ruaudel.emmanuel@orange.fr](mailto:ruaudel.emmanuel@orange.fr) · 🌐 [rennesdev.fr](https://rennesdev.fr)
+
+
 > Générez des factures **PDF/A-3 avec XML embarqué** (norme Factur-X) en 3 clics.  
 > **Frontend HTML + Backend Python** — zéro dépendance cloud, zéro abonnement.
 
