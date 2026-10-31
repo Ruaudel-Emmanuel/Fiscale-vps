@@ -34,7 +34,7 @@ Un générateur **100 % open source**, **local**, **conforme** :
 |---|---|
 | **🐍 Python backend** | Génération PDF/A-3 + XML factur-x avec `reportlab` + `factur-x` |
 | **🎨 Frontend HTML/JS** | Interface de saisie avec export JSON vers le backend |
-| **📜 Conformité réglementaire** | Respect de la norme EN 16969 / Factur-X (profil minimum) |
+| **📜 Conformité réglementaire** | Respect de la norme EN 16931 / Factur-X (profil minimum) |
 | **🔧 Architecture réelle** | Séparation frontend/backend, pipeline de validation |
 | **🧪 QA / validation** | Instructions veraPDF + validateur EN 16931 incluses |
 
