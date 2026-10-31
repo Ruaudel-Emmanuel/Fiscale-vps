@@ -115,7 +115,7 @@ verapdf output.pdf
 
 ## 👤 À propos
 
-Développé par [Emmanuel Ruaudel](https://github.com/Ruaudel-Emmanuel) — freelance automation & Python.  
+Développé par [Emmanuel Ruaudel](https://github.com/Ruaudel-Emmanuel) — Directeur de la Transformation Numérique.  
 Ce projet montre une maîtrise de :
 - Python backend (génération PDF, XML, conformité réglementaire)
 - Frontend HTML/JS (formulaire, export JSON)
