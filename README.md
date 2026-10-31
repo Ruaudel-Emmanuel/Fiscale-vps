@@ -2,11 +2,6 @@
 
 Ce projet illustre mon accompagnement des TPE/PME vers la facturation électronique obligatoire : conforme, local, sans abonnement.
 
----
-
-## 🤝 Ce projet, c'est aussi mon métier
-
-
 > Générez des factures **PDF/A-3 avec XML embarqué** (norme Factur-X) en 3 clics.  
 > **Frontend HTML + Backend Python** — zéro dépendance cloud, zéro abonnement.
 
